@@ -107,7 +107,7 @@ Namespaces are an easy way to prevent collision of code. I'd recommend you'd [re
 And like that, you've just created your fist webapp! Navigate to where yii2 is located at, and you should see the following page.
 
 <center>
-<img src="/uploads/c4ca4238a0b923820dcc509a6f75849b.png"  style="max-width: 700px"/>
+<img src="https://www.erianna.com/uploads/c4ca4238a0b923820dcc509a6f75849b.png"  style="max-width: 700px"/>
 <span style="font-weight:bold; font-size: 12px;">Your First Yii2 App!</span>
 <br />
 <br />
