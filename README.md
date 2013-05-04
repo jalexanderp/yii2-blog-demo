@@ -477,7 +477,7 @@ if ($this->populate($_POST, $model))
 {
 	//Then do something
 }
-~~
+~~~
 
 Unfortunatly I couldn't get it to work in the latest version. My model data remained unchanged. Secondly, I was unable to get $model->attributes = $_POST['Post'] to work. ActiveRecord still seems to be lagging behind, so for now, manually setting data is the way to go.
 
@@ -529,7 +529,7 @@ public function rules()
 		array('title, content', 'required'),
 	);
 }
-~~
+~~~
 
 This method makes the title and content field required. Now when you attempt to save the model, you'll get an error if either of those fields are blank. And since we're using bootstrap, it's pretty easy to see _what_ the error was. Give it a try!
 
@@ -622,3 +622,17 @@ public function actionUpdate($id=NULL)
 Notice anything interesting? We're still using the create view in our update action because _they are exactly the same_. Cool huh?
 
 ### Concluding Thoughts
+
+Well there you have it. In a couple of hours you've gone from knowing nothing about Yii Framework 2 to having a very simple CRUD application. Using this knowledge you can easily scale your application to support having users, having authentication for the views, adding additional tables to your database, and even adding more powerful features.
+
+Yii2 is _very_ similar to Yii 1.x, however there are still a lot of differences that you'll need to reload. While Yii2 isn't very well documented yet, I wrote this entire blog post just by looking at the source code on Github. The code for Yii2 is pretty well documented, and since the methods are similar to Yii 1.x, it was easy to find what I was looking for, either through examples or just the source code for various classes.
+
+As we discovered, there are still some issues that need to be resolved (either through better documentation of ActiveRecord or through fixing something that may be broken).
+
+If you'd like the browse the source code for this project, [you can download it from Github.](https://github.com/charlesportwoodii/yii2-blog-demo).
+
+If you'd like to play around with the demo itself without installing it, you can browse the app at [yii2.erianna.com](http://yii2.erianna.com).
+
+The original blog post for this entry can be found on my personal blog here: [Getting Started With Yii Framework 2](https://www.erianna.com/getting-starting-with-yii-framework-2).
+
+For more tutorials, guides, source code, and information visit my blog at [https://www.erianna.com](https://www.erianna.com)
