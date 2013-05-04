@@ -2,6 +2,7 @@
 
 ### Disclaimer
 This guide is meant to help you started with Yii2. Yii2 is by no means "production" ready. I do not recommend using this in production.
+
 ------------
 
 Today Yii Framework made the announcement that Yii2 was now available for a public preview. A lot has changed from Yii1 to Yii2, 
