@@ -1,5 +1,9 @@
 # Getting Started With Yii Framework 2. A Basic Tutorial
 
+### Disclaimer
+This guide is meant to help you started with Yii2. Yii2 is by no means "production" ready. I do not recommend using this in production.
+------------
+
 Today Yii Framework made the announcement that Yii2 was now available for a public preview. A lot has changed from Yii1 to Yii2, 
 
 This tutorial will go over making a simple blog site in Yii2. For this guide, we'll be getting and installing Yii2, creating a base app, connecting to a database, and configuring logic to create, updated, read, and delete posts.
@@ -87,24 +91,24 @@ Next, we updated our config path to use <strong>__FILE__</strong> instead of <st
 
 --------------------
 
-Before we continue, it's important to notice there's something new in Yii" __Namespaces__
+Before we continue, it's important to notice there's something new in Yii" __Name spaces__
 
 ~~~
 $app = new \yii\web\Application($config);
 ~~~
 
-The point of namespaces is to encapsulate code in logical units to prevent collision of multiple code bases. So you have two classes, both named __Foo__ and that both have the method __Bar__, assuming they are both namespaces you can call both of them independently of each other as follows, without any collision of classes.
+The point of name spaces is to encapsulate code in logical units to prevent collision of multiple code bases. So you have two classes, both named __Foo__ and that both have the method __Bar__, assuming they are both name spaces you can call both of them independently of each other as follows, without any collision of classes.
 
 ~~~
 $foo = new \namespace\Foo;
 $foo2 = new \namespace2\Foo;
 ~~~
 
-Namespaces are an easy way to prevent collision of code. I'd recommend you'd [read up on them](http://www.php.net/manual/en/language.namespaces.rationale.php), since Yii2 has been namespaced.
+Name spaces are an easy way to prevent collision of code. I'd recommend you'd [read up on them](http://www.php.net/manual/en/language.namespaces.rationale.php), since Yii2 has been name spaced.
 
 ---------------
 
-And like that, you've just created your fist webapp! Navigate to where yii2 is located at, and you should see the following page.
+And like that, you've just created your fist web app! Navigate to where yii2 is located at, and you should see the following page.
 
 <center>
 <img src="https://www.erianna.com/uploads/c4ca4238a0b923820dcc509a6f75849b.png"  style="max-width: 700px"/>
@@ -145,7 +149,7 @@ First, open up your __/protected/views/layout/main.php__ file, then replace it w
 </html>
 ~~~
 
-Then refresh the page. See? Isn't everything prettier with Twiiter Bootstrap? Again, not much has changed from Yii1 to Yii2. You still have $content being the variable you use for displaying content in views. __Yii::app()__ has changed to be __Yii::$app__ however. Again, everything in Yii2 has been namespaced, so it's important to remember to access everything by their new namespace instead of just calling the raw class.
+Then refresh the page. See? Isn't everything prettier with Twitter Bootstrap? Again, not much has changed from Yii1 to Yii2. You still have $content being the variable you use for displaying content in views. __Yii::app()__ has changed to be __Yii::$app__ however. Again, everything in Yii2 has been name spaced, so it's important to remember to access everything by their new name space instead of just calling the raw class.
 
 Now lets do some real coding!
 
@@ -184,7 +188,7 @@ return array(
         // uncomment the following to use a MySQL database
         'db' => array(
                 'class' => 'yii\db\Connection',
-                'dsn' => 'mysql:host=home.erianna.net;dbname=yii2',
+                'dsn' => 'mysql:host=localhostt;dbname=yii2',
                 'username' => 'yii2', 
                 'password' => '<password>',
                 ),
@@ -250,13 +254,13 @@ class Post extends \yii\db\ActiveRecord
 
 If you're familiar with Yii1, the only thing that has really changed in ActiveRecord (at least in this example) is that the functions __primaryKey__, and __tableName__ are now static methods. Everything else is basically the same. For the most part, ActiveRecord has remained unchanged.
 
-The most important part of this class is the inclusion of the namespace __app\models__. This tells Yii where we can reference this file at.
+The most important part of this class is the inclusion of the name space __app\models__. This tells Yii where we can reference this file at.
 
-Unlike Yii1, where you can just call the class name, Yii2 uses a different type of autoloaded which requires you to explicitly define what classes you intent on using. While this might make development a little slower (Trying to remember to include \yii\framework\web\Html can get old really fast instead of just calling CHtml), it should make Yii2 significantly faster. Since the autoloader won't have to search through the entire framework just to get one class. At least in theory.
+Unlike Yii1, where you can just call the class name, Yii2 uses a different type of auto loaded which requires you to explicitly define what classes you intent on using. While this might make development a little slower (Trying to remember to include \yii\framework\web\Html can get old really fast instead of just calling CHtml), it should make Yii2 significantly faster. Since the autoloader won't have to search through the entire framework just to get one class. At least in theory.
 
 ### CRUD!
 
-Now that we've namespaced our Post model, we can get to working creating our basic CRUD app.
+Now that we've name spaced our Post model, we can get to working creating our basic CRUD app.
 
 #### Viewing Everything
 First, lets start by updating our index action so that we can view everything. I like to be able to view everything from my index action, so lets start there. Open up __controllers/SiteController.php__ and update your index action so it looks as follows:
@@ -276,11 +280,11 @@ A couple of things to notice here. First, __::model()->__ is gone. Raw model dat
 
 Secondly, findAll has been replaced by find()->all(). All find methods now stem either from find() or findBySql().
 
-Finally, $this->render() now requires an echo in front of it. Personally, I hate this. It feels _very_ CakePHP ish, and is in my opinion redundant. The idea behind this however is that stuff you want to be rendered to the screen should be echoed, otherwise it is simply available as a $variable for you to manipulate. Personally, I prefer the older way of rendering to a variable (passing a function paramater to the render method), but maybe it will grow on me.
+Finally, $this->render() now requires an echo in front of it. Personally, I hate this. It feels _very_ CakePHP ish, and is in my opinion redundant. The idea behind this however is that stuff you want to be rendered to the screen should be echoed, otherwise it is simply available as a $variable for you to manipulate. Personally, I prefer the older way of rendering to a variable (passing a function parameter to the render method), but maybe it will grow on me.
 
 Now refresh the page...
 
-If you're familiar with namespaces, your probablly screaming at me right now asking me why I didn't include the Post model. If you're not familiar with namespaces, you're probablly confuses as to why your getting an error. The reason is simple. _You have to remember your namespaces in Yii2__. Anything you want to use, you have to explicitly define unless it already has been defined.
+If you're familiar with namespaces, your probably screaming at me right now asking me why I didn't include the Post model. If you're not familiar with name spaces, you're probably confuses as to why your getting an error. The reason is simple. _You have to remember your name spaces in Yii2__. Anything you want to use, you have to explicitly define unless it already has been defined.
 
 Add the following line to top of _SiteController_. Then refresh the page.
 
@@ -321,7 +325,7 @@ Now lets add some markup to display our posts. Open up __protected/views/site/in
 </table>
 ~~~
 
-Hmmm, looks different doesn't it! CHtml::link() is gone, and has been replaced by a helper namespace called Html. Fortunatly, the strucutre from CHtml::link to Html::a hasn't changed at all. So it's simply a matter of filling in the paramters.
+Hmmm, looks different doesn't it! CHtml::link() is gone, and has been replaced by a helper name space called Html. Fortunately, the structure from CHtml::link to Html::a hasn't changed at all. So it's simply a matter of filling in the parameters.
 
 #### Read
 
@@ -421,9 +425,9 @@ public function actionDelete($id=NULL)
 }
 ~~~
 
-A couple things to note with Yii2. First, redirecting is now done through __Yii::$app->getResponse->redirect()__ instead of __$this->redirect()__. While this makes sense from code organization parspective, it's a pain to type out. Additionally, it also gives the feeling that $app is severely overloaded. While a pain to type, it's maintained the same method definition from Yii1.
+A couple things to note with Yii2. First, redirecting is now done through __Yii::$app->getResponse->redirect()__ instead of __$this->redirect()__. While this makes sense from code organization perspective, it's a pain to type out. Additionally, it also gives the feeling that $app is severely overloaded. While a pain to type, it's maintained the same method definition from Yii1.
 
-Secondly, setFlash is now acessed throguh $app instead of app(). You should be getting the hange of that by now though. =)
+Secondly, setFlash is now accessed through $app instead of app(). You should be getting the hange of that by now though. =)
 
 Now that we've handled deleting, lets go back to our __protected/views/site/index.php__ file and catch those flash message we sent.
 
@@ -449,7 +453,7 @@ Now try deleting "Example Post". Pretty neat huh? You're getting the idea of Yii
 
 Now lets get to the fun stuff, creating new entries in our blog. We're going to need a couple of things to post creation. First, we're going to be use ActiveForm to handle the form itself. Secondly we're going to catch catching and validating $_POST data. And finally we're going to be saving it to the database for storage. Lets get started.
 
-First, we'll need to create a view for our form. Start by creating a file __protected/views/site/create.php__. Since we'll be using a widget in our view, you'll also need to create a folder "assets" in the root of our webapp and make it writable by your webserver. Chmod 755 usually does the trick. Then add the following function definition to SiteController.
+First, we'll need to create a view for our form. Start by creating a file __protected/views/site/create.php__. Since we'll be using a widget in our view, you'll also need to create a folder "assets" in the root of our web app and make it writable by your web server. Chmod 755 usually does the trick. Then add the following function definition to SiteController.
 
 ~~~
 public function actionCreate()
@@ -479,7 +483,7 @@ if ($this->populate($_POST, $model))
 }
 ~~~
 
-Unfortunatly I couldn't get it to work in the latest version. My model data remained unchanged. Secondly, I was unable to get $model->attributes = $_POST['Post'] to work. ActiveRecord still seems to be lagging behind, so for now, manually setting data is the way to go.
+Unfortunately I couldn't get it to work in the latest version. My model data remained unchanged. Secondly, I was unable to get $model->attributes = $_POST['Post'] to work. ActiveRecord still seems to be lagging behind, so for now, manually setting data is the way to go.
 
 Finally, I hit another road block getting data to actually save into the database with a unique PK. So we're going to have to do that manually. If someone _does_ figure out what's wrong, be sure to leave a comment below.
 
@@ -533,7 +537,7 @@ public function rules()
 
 This method makes the title and content field required. Now when you attempt to save the model, you'll get an error if either of those fields are blank. And since we're using bootstrap, it's pretty easy to see _what_ the error was. Give it a try!
 
-Next, we're going to autopopulate our created and updated times.
+Next, we're going to auto populate our created and updated times.
 
 First, we're going to add another __use__ line to the top of our model.
 
