@@ -5,16 +5,6 @@ use \yii\db\Expression;
 class Post extends \yii\db\ActiveRecord
 {
 	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Comments the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
-	/**
 	 * @return string the associated database table name
 	 */
 	public static function tableName()
@@ -51,17 +41,15 @@ class Post extends \yii\db\ActiveRecord
 		);
 	}
 
+	/**
+	 * Autoincriment the tale id
+	 * @param  [type] $insert [description]
+	 * @return [type]         [description]
+	 */
 	public function beforeSave($insert)
 	{
-
 		if ($this->isNewRecord)
-		{
 			$this->created = new Expression('NOW()');
-			$command = static::getDb()->createCommand("select max(id) as id from posts")->queryAll();
-			$this->id = $command[0]['id'] + 1;
-		}
-
-		$this->updated = new Expression('NOW()');
 		return parent::beforeSave($insert);
 	}
 }

@@ -15,8 +15,7 @@ class SiteController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$post = new Post;
-		$data = $post->find()->all();
+		$data = Post::find()->all();
 		echo $this->render('index', array(
 			'data' => $data
 		));
@@ -28,14 +27,8 @@ class SiteController extends Controller
 	public function actionCreate()
 	{
 		$model = new Post;
-		if (isset($_POST['Post']))
-		{
-			$model->title = $_POST['Post']['title'];
-			$model->content = $_POST['Post']['content'];
-
-			if ($model->save())
-				Yii::$app->response->redirect(array('site/read', 'id' => $model->id));
-		}
+		if ($this->populate($_POST, $model) && $model->save())
+			Yii::$app->response->redirect(array('site/read', 'id' => $model->id));
 
 		echo $this->render('create', array(
 			'model' => $model
@@ -49,21 +42,21 @@ class SiteController extends Controller
 	public function actionUpdate($id=NULL)
 	{
 		if ($id === NULL)
-			throw new HttpException(404, 'Not Found');
+		{
+			Yii::$app->session->setFlash('error', 'A post with that id does not exist');
+			Yii::$app->getResponse()->redirect(array('site/index'));
+		}
 
 		$model = Post::find($id);
 
 		if ($model === NULL)
-			throw new HttpException(404, 'Document Does Not Exist');
-
-		if (isset($_POST['Post']))
 		{
-			$model->title = $_POST['Post']['title'];
-			$model->content = $_POST['Post']['content'];
-
-			if ($model->save())
-				Yii::$app->response->redirect(array('site/read', 'id' => $model->id));
+			Yii::$app->session->setFlash('error', 'A post with that id does not exist');
+			Yii::$app->getResponse()->redirect(array('site/index'));
 		}
+
+		if ($this->populate($_POST, $model) && $model->save())
+			Yii::$app->response->redirect(array('site/read', 'id' => $model->id));
 
 		echo $this->render('create', array(
 			'model' => $model
@@ -77,12 +70,18 @@ class SiteController extends Controller
 	public function actionRead($id=NULL)
 	{
 		if ($id === NULL)
-			throw new HttpException(404, 'Not Found');
+		{
+			Yii::$app->session->setFlash('error', 'A post with that id does not exist');
+			Yii::$app->getResponse()->redirect(array('site/index'));
+		}
 
 		$post = Post::find($id);
 
 		if ($post === NULL)
-			throw new HttpException(404, 'Document Does Not Exist');
+		{
+			Yii::$app->session->setFlash('error', 'A post with that id does not exist');
+			Yii::$app->getResponse()->redirect(array('site/index'));
+		}
 
 		echo $this->render('read', array(
 			'post' => $post
@@ -97,7 +96,7 @@ class SiteController extends Controller
 	{
 		if ($id === NULL)
 		{
-			Yii::$app->session->setFlash('PostDeletedError');
+			Yii::$app->session->setFlash('error', 'A post with that id does not exist');
 			Yii::$app->getResponse()->redirect(array('site/index'));
 		}
 
@@ -106,13 +105,13 @@ class SiteController extends Controller
 
 		if ($post === NULL)
 		{
-			Yii::$app->session->setFlash('PostDeletedError');
+			Yii::$app->session->setFlash('error', 'A post with that id does not exist');
 			Yii::$app->getResponse()->redirect(array('site/index'));
 		}
 
 		$post->delete();
 
-		Yii::$app->session->setFlash('PostDeleted');
+		Yii::$app->session->setFlash('success', 'Your post has been successfully deleted');
 		Yii::$app->getResponse()->redirect(array('site/index'));
 	}
 }

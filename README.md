@@ -1,5 +1,22 @@
 # Getting Started With Yii Framework 2. A Basic Tutorial
 
+### Disclaimer
+This guide is meant to help you started with Yii2. Yii2 is by no means "production" ready. I do not recommend using this in production.
+
+------------
+
+### Edit
+This guide has been updated to reflect some changes that should import the quality of this post. Namely:
+
+1) Getting ActiveRecord to autoincriment the database
+2) Changing the charset of utf8.
+3) Removal of model() method in Post Model
+4) Update findallMethod
+5) Added Flash Messages instead of 404 errors.
+6) Removal of XSS Injection Vector <-- FML
+
+------------
+
 Today Yii Framework made the announcement that Yii2 was now available for a public preview. A lot has changed from Yii1 to Yii2, 
 
 This tutorial will go over making a simple blog site in Yii2. For this guide, we'll be getting and installing Yii2, creating a base app, connecting to a database, and configuring logic to create, updated, read, and delete posts.
@@ -87,24 +104,24 @@ Next, we updated our config path to use <strong>__FILE__</strong> instead of <st
 
 --------------------
 
-Before we continue, it's important to notice there's something new in Yii" __Namespaces__
+Before we continue, it's important to notice there's something new in Yii" __Name spaces__
 
 ~~~
 $app = new \yii\web\Application($config);
 ~~~
 
-The point of namespaces is to encapsulate code in logical units to prevent collision of multiple code bases. So you have two classes, both named __Foo__ and that both have the method __Bar__, assuming they are both namespaces you can call both of them independently of each other as follows, without any collision of classes.
+The point of name spaces is to encapsulate code in logical units to prevent collision of multiple code bases. So you have two classes, both named __Foo__ and that both have the method __Bar__, assuming they are both name spaces you can call both of them independently of each other as follows, without any collision of classes.
 
 ~~~
 $foo = new \namespace\Foo;
 $foo2 = new \namespace2\Foo;
 ~~~
 
-Namespaces are an easy way to prevent collision of code. I'd recommend you'd [read up on them](http://www.php.net/manual/en/language.namespaces.rationale.php), since Yii2 has been namespaced.
+Name spaces are an easy way to prevent collision of code. I'd recommend you'd [read up on them](http://www.php.net/manual/en/language.namespaces.rationale.php), since Yii2 has been name spaced.
 
 ---------------
 
-And like that, you've just created your fist webapp! Navigate to where yii2 is located at, and you should see the following page.
+And like that, you've just created your fist web app! Navigate to where yii2 is located at, and you should see the following page.
 
 <center>
 <img src="https://www.erianna.com/uploads/c4ca4238a0b923820dcc509a6f75849b.png"  style="max-width: 700px"/>
@@ -145,7 +162,7 @@ First, open up your __/protected/views/layout/main.php__ file, then replace it w
 </html>
 ~~~
 
-Then refresh the page. See? Isn't everything prettier with Twiiter Bootstrap? Again, not much has changed from Yii1 to Yii2. You still have $content being the variable you use for displaying content in views. __Yii::app()__ has changed to be __Yii::$app__ however. Again, everything in Yii2 has been namespaced, so it's important to remember to access everything by their new namespace instead of just calling the raw class.
+Then refresh the page. See? Isn't everything prettier with Twitter Bootstrap? Again, not much has changed from Yii1 to Yii2. You still have $content being the variable you use for displaying content in views. __Yii::app()__ has changed to be __Yii::$app__ however. Again, everything in Yii2 has been name spaced, so it's important to remember to access everything by their new name space instead of just calling the raw class.
 
 Now lets do some real coding!
 
@@ -159,14 +176,13 @@ Login to MySQL, and create a user and database both named yii2. Then run the fol
 ~~~
 DROP TABLE IF EXISTS `posts`;
 CREATE TABLE IF NOT EXISTS `posts` (
-  `id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `content` text NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_bin NOT NULL,
+  `content` text COLLATE utf8_bin NOT NULL,
   `created` datetime NOT NULL,
-  `updated` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-ALTER TABLE `posts` ADD PRIMARY KEY(`id`);
+  `updated` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 
 INSERT INTO `yii2`.`posts` (`id`, `title`, `content`, `created`, `updated`) VALUES ('1', 'Example Title', 'New Post', NOW(), NOW());
 ~~~
@@ -184,7 +200,7 @@ return array(
         // uncomment the following to use a MySQL database
         'db' => array(
                 'class' => 'yii\db\Connection',
-                'dsn' => 'mysql:host=home.erianna.net;dbname=yii2',
+                'dsn' => 'mysql:host=localhostt;dbname=yii2',
                 'username' => 'yii2', 
                 'password' => '<password>',
                 ),
@@ -206,16 +222,6 @@ Create a new folder called __models__ under protected, and then created a new fi
 namespace app\models;
 class Post extends \yii\db\ActiveRecord
 {
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @param string $className active record class name.
-	 * @return Comments the static model class
-	 */
-	public static function model($className=__CLASS__)
-	{
-		return parent::model($className);
-	}
-
 	/**
 	 * @return string the associated database table name
 	 */
@@ -250,13 +256,13 @@ class Post extends \yii\db\ActiveRecord
 
 If you're familiar with Yii1, the only thing that has really changed in ActiveRecord (at least in this example) is that the functions __primaryKey__, and __tableName__ are now static methods. Everything else is basically the same. For the most part, ActiveRecord has remained unchanged.
 
-The most important part of this class is the inclusion of the namespace __app\models__. This tells Yii where we can reference this file at.
+The most important part of this class is the inclusion of the name space __app\models__. This tells Yii where we can reference this file at.
 
-Unlike Yii1, where you can just call the class name, Yii2 uses a different type of autoloaded which requires you to explicitly define what classes you intent on using. While this might make development a little slower (Trying to remember to include \yii\framework\web\Html can get old really fast instead of just calling CHtml), it should make Yii2 significantly faster. Since the autoloader won't have to search through the entire framework just to get one class. At least in theory.
+Unlike Yii1, where you can just call the class name, Yii2 uses a different type of auto loaded which requires you to explicitly define what classes you intent on using. While this might make development a little slower (Trying to remember to include \yii\framework\web\Html can get old really fast instead of just calling CHtml), it should make Yii2 significantly faster. Since the autoloader won't have to search through the entire framework just to get one class. At least in theory.
 
 ### CRUD!
 
-Now that we've namespaced our Post model, we can get to working creating our basic CRUD app.
+Now that we've name spaced our Post model, we can get to working creating our basic CRUD app.
 
 #### Viewing Everything
 First, lets start by updating our index action so that we can view everything. I like to be able to view everything from my index action, so lets start there. Open up __controllers/SiteController.php__ and update your index action so it looks as follows:
@@ -264,8 +270,7 @@ First, lets start by updating our index action so that we can view everything. I
 ~~~
 public function actionIndex()
 {
-	$post = new Post;
-	$data = $post->find()->all();
+	$data = Post::find()->all();
 	echo $this->render('index', array(
 		'data' => $data
 	));
@@ -276,11 +281,11 @@ A couple of things to notice here. First, __::model()->__ is gone. Raw model dat
 
 Secondly, findAll has been replaced by find()->all(). All find methods now stem either from find() or findBySql().
 
-Finally, $this->render() now requires an echo in front of it. Personally, I hate this. It feels _very_ CakePHP ish, and is in my opinion redundant. The idea behind this however is that stuff you want to be rendered to the screen should be echoed, otherwise it is simply available as a $variable for you to manipulate. Personally, I prefer the older way of rendering to a variable (passing a function paramater to the render method), but maybe it will grow on me.
+Finally, $this->render() now requires an echo in front of it. Personally, I hate this. It feels _very_ CakePHP ish, and is in my opinion redundant. The idea behind this however is that stuff you want to be rendered to the screen should be echoed, otherwise it is simply available as a $variable for you to manipulate. Personally, I prefer the older way of rendering to a variable (passing a function parameter to the render method), but maybe it will grow on me.
 
 Now refresh the page...
 
-If you're familiar with namespaces, your probablly screaming at me right now asking me why I didn't include the Post model. If you're not familiar with namespaces, you're probablly confuses as to why your getting an error. The reason is simple. _You have to remember your namespaces in Yii2__. Anything you want to use, you have to explicitly define unless it already has been defined.
+If you're familiar with namespaces, your probably screaming at me right now asking me why I didn't include the Post model. If you're not familiar with name spaces, you're probably confuses as to why your getting an error. The reason is simple. _You have to remember your name spaces in Yii2__. Anything you want to use, you have to explicitly define unless it already has been defined.
 
 Add the following line to top of _SiteController_. Then refresh the page.
 
@@ -321,7 +326,7 @@ Now lets add some markup to display our posts. Open up __protected/views/site/in
 </table>
 ~~~
 
-Hmmm, looks different doesn't it! CHtml::link() is gone, and has been replaced by a helper namespace called Html. Fortunatly, the strucutre from CHtml::link to Html::a hasn't changed at all. So it's simply a matter of filling in the paramters.
+Hmmm, looks different doesn't it! CHtml::link() is gone, and has been replaced by a helper name space called Html. Fortunately, the structure from CHtml::link to Html::a hasn't changed at all. So it's simply a matter of filling in the parameters.
 
 #### Read
 
@@ -346,19 +351,25 @@ Then, lets create our read action
 
 ~~~
 public function actionRead($id=NULL)
+{
+	if ($id === NULL)
 	{
-		if ($id === NULL)
-			throw new HttpException(404, 'Not Found');
-
-		$post = Post::find($id);
-
-		if ($post === NULL)
-			throw new HttpException(404, 'Document Does Not Exist');
-
-		echo $this->render('read', array(
-			'post' => $post
-		));
+		Yii::$app->session->setFlash('error', 'A post with that id does not exist');
+		Yii::$app->getResponse()->redirect(array('site/index'));
 	}
+
+	$post = Post::find($id);
+
+	if ($post === NULL)
+	{
+		Yii::$app->session->setFlash('error', 'A post with that id does not exist');
+		Yii::$app->getResponse()->redirect(array('site/index'));
+	}
+
+	echo $this->render('read', array(
+		'post' => $post
+	));
+}
 ~~~
 
 Just for clarity, HttpException is essentially CHttpException. All we're doing is making querying the database for a post if an id of $id, and rendering it. If the post isn't found, or an id isn't provided then we're throwing an HttpException.
@@ -401,7 +412,7 @@ public function actionDelete($id=NULL)
 {
 	if ($id === NULL)
 	{
-		Yii::$app->session->setFlash('PostDeletedError');
+		Yii::$app->session->setFlash('error', 'A post with that id does not exist');
 		Yii::$app->getResponse()->redirect(array('site/index'));
 	}
 
@@ -410,35 +421,35 @@ public function actionDelete($id=NULL)
 
 	if ($post === NULL)
 	{
-		Yii::$app->session->setFlash('PostDeletedError');
+		Yii::$app->session->setFlash('error', 'A post with that id does not exist');
 		Yii::$app->getResponse()->redirect(array('site/index'));
 	}
 
 	$post->delete();
 
-	Yii::$app->session->setFlash('PostDeleted');
+	Yii::$app->session->setFlash('success', 'Your post has been successfully deleted');
 	Yii::$app->getResponse()->redirect(array('site/index'));
 }
 ~~~
 
-A couple things to note with Yii2. First, redirecting is now done through __Yii::$app->getResponse->redirect()__ instead of __$this->redirect()__. While this makes sense from code organization parspective, it's a pain to type out. Additionally, it also gives the feeling that $app is severely overloaded. While a pain to type, it's maintained the same method definition from Yii1.
+A couple things to note with Yii2. First, redirecting is now done through __Yii::$app->getResponse->redirect()__ instead of __$this->redirect()__. While this makes sense from code organization perspective, it's a pain to type out. Additionally, it also gives the feeling that $app is severely overloaded. While a pain to type, it's maintained the same method definition from Yii1.
 
-Secondly, setFlash is now acessed throguh $app instead of app(). You should be getting the hange of that by now though. =)
+Secondly, setFlash is now accessed through $app instead of app(). You should be getting the hange of that by now though. =)
 
 Now that we've handled deleting, lets go back to our __protected/views/site/index.php__ file and catch those flash message we sent.
 
 Just add the following below the first <hr /> tag
 
 ~~~
-<?php if(Yii::$app->session->hasFlash('PostDeletedError')): ?>
+<?php if(Yii::$app->session->hasFlash('error')): ?>
 <div class="alert alert-error">
-	There was an error deleting your post!
+	<?php echo Yii::$app->session->getFlash('error'); ?>
 </div>
 <?php endif; ?>
 
-<?php if(Yii::$app->session->hasFlash('PostDeleted')): ?>
+<?php if(Yii::$app->session->hasFlash('success')): ?>
 <div class="alert alert-success">
-	Your post has successfully been deleted!
+	<?php echo Yii::$app->session->getFlash('success'); ?>
 </div>
 <?php endif; ?>
 ~~~
@@ -449,20 +460,14 @@ Now try deleting "Example Post". Pretty neat huh? You're getting the idea of Yii
 
 Now lets get to the fun stuff, creating new entries in our blog. We're going to need a couple of things to post creation. First, we're going to be use ActiveForm to handle the form itself. Secondly we're going to catch catching and validating $_POST data. And finally we're going to be saving it to the database for storage. Lets get started.
 
-First, we'll need to create a view for our form. Start by creating a file __protected/views/site/create.php__. Since we'll be using a widget in our view, you'll also need to create a folder "assets" in the root of our webapp and make it writable by your webserver. Chmod 755 usually does the trick. Then add the following function definition to SiteController.
+First, we'll need to create a view for our form. Start by creating a file __protected/views/site/create.php__. Since we'll be using a widget in our view, you'll also need to create a folder "assets" in the root of our web app and make it writable by your web server. Chmod 755 usually does the trick. Then add the following function definition to SiteController.
 
 ~~~
 public function actionCreate()
 {
 	$model = new Post;
-	if (isset($_POST['Post']))
-	{
-		$model->title = $_POST['Post']['title'];
-		$model->content = $_POST['Post']['content'];
-
-		if ($model->save())
+	if ($this->populate($_POST, $model) && $model->save())
 			Yii::$app->response->redirect(array('site/read', 'id' => $model->id));
-	}
 
 	echo $this->render('create', array(
 		'model' => $model
@@ -470,35 +475,8 @@ public function actionCreate()
 }
 ~~~
 
-That looks more or less the same as a Yii1 Form. A couple of differences though. first, Controller now has a method called "populate" ($this->populate($ds, $model)) which in theory should allow us to bypass this whole isset($_POST) nonsense. The code for creating new data would look like this.
 
-~~~
-if ($this->populate($_POST, $model))
-{
-	//Then do something
-}
-~~~
-
-Unfortunatly I couldn't get it to work in the latest version. My model data remained unchanged. Secondly, I was unable to get $model->attributes = $_POST['Post'] to work. ActiveRecord still seems to be lagging behind, so for now, manually setting data is the way to go.
-
-Finally, I hit another road block getting data to actually save into the database with a unique PK. So we're going to have to do that manually. If someone _does_ figure out what's wrong, be sure to leave a comment below.
-
-First, lets update our PostModel so we can get a unique primary key working. Simply add a the following method to the end of your Post model:
-
-~~~
-public function beforeSave($insert)
-{
-	if ($this->isNewRecord)
-	{
-		$command = static::getDb()->createCommand("select max(id) as id from posts")->queryAll();
-		$this->id = $command[0]['id'] + 1;
-	}
-
-	return parent::beforeSave($insert);
-}
-~~~
-
-All that this does, is check if the model we're inserting is a new record, and if it is, to get the highest id in the database and add one to it, and use that for our id.
+All that this does, is check if the model we're inserting is a new record, and if it is, to get the highest id in the database and add one to it, and use that for our id. Notice the new method "populate".
 
 I trid a bunch of different combinations (NULL, 0, _ for $model->id, but for some reason ActiveRecord refused to save the model with anything but 0. I have no idea why it isn't working yet).
 
@@ -533,7 +511,7 @@ public function rules()
 
 This method makes the title and content field required. Now when you attempt to save the model, you'll get an error if either of those fields are blank. And since we're using bootstrap, it's pretty easy to see _what_ the error was. Give it a try!
 
-Next, we're going to autopopulate our created and updated times.
+Next, we're going to auto populate our created and updated times.
 
 First, we're going to add another __use__ line to the top of our model.
 
@@ -560,15 +538,8 @@ Your final method definition should look like this:
 ~~~
 public function beforeSave($insert)
 {
-
 	if ($this->isNewRecord)
-	{
 		$this->created = new Expression('NOW()');
-		$command = static::getDb()->createCommand("select max(id) as id from posts")->queryAll();
-		$this->id = $command[0]['id'] + 1;
-	}
-
-	$this->updated = new Expression('NOW()');
 	return parent::beforeSave($insert);
 }
 ~~~
@@ -591,27 +562,27 @@ In our update action, we're going to use.
 $model = Post::find($id);
 ~~~
 
-I like throwing http exceptions when stuff isn't found, so my action is going to do some error checking for us as well. Assuming you add error checking, your action should look like this:
+I like HTTPExceptions for stuff when it isn't found. That being said, you should probably be nice to the user and just warn them with a soft flash message instead of a hard http exception that makes it look like your site exploded.
 
 ~~~
 public function actionUpdate($id=NULL)
 {
 	if ($id === NULL)
-		throw new HttpException(404, 'Not Found');
+	{
+		Yii::$app->session->setFlash('error', 'A post with that id does not exist');
+		Yii::$app->getResponse()->redirect(array('site/index'));
+	}
 
 	$model = Post::find($id);
 
 	if ($model === NULL)
-		throw new HttpException(404, 'Document Does Not Exist');
-	
-	if (isset($_POST['Post']))
 	{
-		$model->title = $_POST['Post']['title'];
-		$model->content = $_POST['Post']['content'];
-
-		if ($model->save())
-			Yii::$app->response->redirect(array('site/read', 'id' => $model->id));
+		Yii::$app->session->setFlash('error', 'A post with that id does not exist');
+		Yii::$app->getResponse()->redirect(array('site/index'));
 	}
+	
+	if ($this->populate($_POST, $model) && $model->save())
+			Yii::$app->response->redirect(array('site/read', 'id' => $model->id));
 
 	echo $this->render('create', array(
 		'model' => $model
@@ -620,6 +591,24 @@ public function actionUpdate($id=NULL)
 ~~~
 
 Notice anything interesting? We're still using the create view in our update action because _they are exactly the same_. Cool huh?
+
+### Sanatizing Data Input
+So you have everything setup now. Easy huh? But what happens if you throw the following into your title.
+
+~~~
+<script type="text/javascript">alert("Hello!");</script>
+~~~
+
+If you're like me, you probably assumed ActiveRecord would sanatize that for you. I know I certainly did. Bad news folks, it doesn't. _Escape and sanatize your stuff. There are evil people about there who want to ruin you because you forgot to sanatize your user input._
+
+So, anywhere that you're outputting user inputted data, escape it using __Html::encode()__. To provide an example, our __protected/views/site/read.php__ should now have output that looks as follows:
+
+~~~
+<h1><?php echo Html::encode($post->title); ?></h1>
+<p><?php echo Html::encode($post->content); ?></p>
+~~~
+
+Now when you visit that page, and some evil person has added a script tag in your form all that is seen is sanatized input.
 
 ### Concluding Thoughts
 
