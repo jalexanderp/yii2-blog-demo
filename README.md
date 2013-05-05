@@ -5,6 +5,7 @@ This guide is meant to help you started with Yii2. Yii2 is by no means "producti
 
 ------------
 
+<<<<<<< HEAD
 ### Edit
 This guide has been updated to reflect some changes that should import the quality of this post. Namely:
 
@@ -17,6 +18,8 @@ This guide has been updated to reflect some changes that should import the quali
 
 ------------
 
+=======
+>>>>>>> d4e408152e8292e555fca0359f250e19b110bc1f
 Today Yii Framework made the announcement that Yii2 was now available for a public preview. A lot has changed from Yii1 to Yii2, 
 
 This tutorial will go over making a simple blog site in Yii2. For this guide, we'll be getting and installing Yii2, creating a base app, connecting to a database, and configuring logic to create, updated, read, and delete posts.
@@ -475,6 +478,36 @@ public function actionCreate()
 }
 ~~~
 
+<<<<<<< HEAD
+=======
+That looks more or less the same as a Yii1 Form. A couple of differences though. first, Controller now has a method called "populate" ($this->populate($ds, $model)) which in theory should allow us to bypass this whole isset($_POST) nonsense. The code for creating new data would look like this.
+
+~~~
+if ($this->populate($_POST, $model))
+{
+	//Then do something
+}
+~~~
+
+Unfortunately I couldn't get it to work in the latest version. My model data remained unchanged. Secondly, I was unable to get $model->attributes = $_POST['Post'] to work. ActiveRecord still seems to be lagging behind, so for now, manually setting data is the way to go.
+
+Finally, I hit another road block getting data to actually save into the database with a unique PK. So we're going to have to do that manually. If someone _does_ figure out what's wrong, be sure to leave a comment below.
+
+First, lets update our PostModel so we can get a unique primary key working. Simply add a the following method to the end of your Post model:
+
+~~~
+public function beforeSave($insert)
+{
+	if ($this->isNewRecord)
+	{
+		$command = static::getDb()->createCommand("select max(id) as id from posts")->queryAll();
+		$this->id = $command[0]['id'] + 1;
+	}
+
+	return parent::beforeSave($insert);
+}
+~~~
+>>>>>>> d4e408152e8292e555fca0359f250e19b110bc1f
 
 All that this does, is check if the model we're inserting is a new record, and if it is, to get the highest id in the database and add one to it, and use that for our id. Notice the new method "populate".
 
