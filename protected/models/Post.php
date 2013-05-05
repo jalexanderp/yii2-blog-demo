@@ -50,6 +50,7 @@ class Post extends \yii\db\ActiveRecord
 	{
 		if ($this->isNewRecord)
 			$this->created = new Expression('NOW()');
+		$this->updated = new Expression("NOW()");
 		return parent::beforeSave($insert);
 	}
 }
